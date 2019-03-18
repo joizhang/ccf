@@ -1,5 +1,7 @@
 package com.joizhang.ccf;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 
 /**
@@ -12,23 +14,21 @@ public class CCF2013123 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
-        int[] nums = new int[n];
+        int[] heights = new int[n];
         for (int i = 0; i < n; i++) {
-            nums[i] = in.nextInt();
+            heights[i] = in.nextInt();
         }
-
-        int i = nums.length / 2;
-        int j = i + 1;
+        Deque<Integer> stack = new ArrayDeque<>();
         int maxArea = 0;
-        while (i >= 0 || j <= nums.length - 1) {
-            int area = Math.min(nums[i], nums[j]) * (j - i + 1);
-            if (area > maxArea) {
-                maxArea = area;
-            }
-            if (nums[i] < nums[j]) {
-                i--;
+        for (int i = 0; i <= n; i++) {
+            int h = (i == 0 || i == n) ? 0 : heights[i];
+            if (stack.isEmpty() || h >= heights[stack.peek()]) {
+                stack.push(i);
             } else {
-                j++;
+                int top = stack.pop();
+                int curArea = heights[top] * (stack.isEmpty() ? i : i - 1 - stack.peek());
+                maxArea = Math.max(maxArea, curArea);
+                i--;
             }
         }
         System.out.println(maxArea);
